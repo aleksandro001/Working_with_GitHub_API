@@ -62,6 +62,7 @@ answerSearch.addEventListener("click", (e) => {
   div.prepend(span);
   carts.append(div);
   answerSearch.innerHTML = "";
+  gitRep.value = "";
 });
 carts.addEventListener("click", (event) => {
   if (event.target.classList.contains("skull"))
