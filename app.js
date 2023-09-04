@@ -1,11 +1,9 @@
-const xhr = new XMLHttpRequest();
+
 const gitRep = document.getElementById("searchGitRep");
 const answerSearch = document.querySelector(".repository__answer-search");
-
 const carts = document.querySelector(".carts");
 let fragment = new DocumentFragment();
-let searchList;
-let answerLint;
+let listAnswer;
 
 function debounce(fn, debounceTime) {
   let timeout;
@@ -18,20 +16,12 @@ function debounce(fn, debounceTime) {
   };
 }
 
-function getRepositories() {
+async function getRepositories() {
+  await fetch(`https://api.github.com/search/repositories?q=${gitRep.value}&per_page=5`)
+    .then((response) => response.json())
+    .then((response) => (listAnswer = response.items));
   try {
-    xhr.open(
-      "GET",
-      `https://api.github.com/search/repositories?q=${gitRep.value}&per_page=5`
-    );
-    xhr.send();
-  } catch (err) {}
-}
-xhr.addEventListener("load", () => {
-  try {
-    searchList = JSON.parse(xhr.response);
-    answerLint = searchList.items;
-    answerLint.forEach((element, index) => {
+    listAnswer.forEach((element, index) => {
       let div = document.createElement("div");
       div.textContent = `${element.name}`;
       div.className = "re";
@@ -42,13 +32,13 @@ xhr.addEventListener("load", () => {
       answerSearch.append(fragment);
     } else {
       answerSearch.childNodes.forEach((element, index) => {
-        element.textContent = answerLint[index].name;
+        element.textContent = listAnswer[index].name;
       });
     }
   } catch (err) {
     answerSearch.textContent = "";
   }
-});
+}
 
 answerSearch.addEventListener("click", (e) => {
   let fragment = new DocumentFragment();
@@ -57,7 +47,7 @@ answerSearch.addEventListener("click", (e) => {
   span.className = "skull";
   div.className = "cart";
   const indexAnswer = e.target.dataset.number;
-  div.innerHTML = `<p>Name: <span>${answerLint[indexAnswer].name}</span></p> <p> Owner: <span>${answerLint[indexAnswer].owner.login}</span></p> <p>Stargazers: <span>${answerLint[indexAnswer].stargazers_count}</span></p>`;
+  div.innerHTML = `<p>Name: <span>${listAnswer[indexAnswer].name}</span></p> <p> Owner: <span>${listAnswer[indexAnswer].owner.login}</span></p> <p>Stargazers: <span>${listAnswer[indexAnswer].stargazers_count}</span></p>`;
 
   div.prepend(span);
   carts.append(div);
@@ -68,6 +58,7 @@ carts.addEventListener("click", (event) => {
   if (event.target.classList.contains("skull"))
     event.target.parentElement.remove();
 });
-getRepositories = debounce(getRepositories, 300);
+
+getRepositories = debounce(getRepositories, 3000);
 
 gitRep.addEventListener("keydown", getRepositories);
