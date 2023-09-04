@@ -42,13 +42,15 @@ async function getRepositories() {
 }
 
 answerSearch.addEventListener("click", (e) => {
-  let fragment = new DocumentFragment();
   let div = document.createElement("div");
   let span = document.createElement("span");
   span.className = "skull";
   div.className = "cart";
   const indexAnswer = e.target.dataset.number;
-  div.innerHTML = `<p>Name: <span>${listAnswer[indexAnswer].name}</span></p> <p> Owner: <span>${listAnswer[indexAnswer].owner.login}</span></p> <p>Stargazers: <span>${listAnswer[indexAnswer].stargazers_count}</span></p>`;
+  div.insertAdjacentHTML(
+    "afterbegin",
+    `<p>Name: <span>${listAnswer[indexAnswer].name}</span></p> <p> Owner: <span>${listAnswer[indexAnswer].owner.login}</span></p> <p>Stargazers: <span>${listAnswer[indexAnswer].stargazers_count}</span></p>`
+  );
 
   div.prepend(span);
   carts.append(div);
@@ -62,4 +64,6 @@ carts.addEventListener("click", (event) => {
 
 getRepositories = debounce(getRepositories, 400);
 
-gitRep.addEventListener("keydown", getRepositories);
+gitRep.addEventListener("keydown", (e) => {
+  if (!(e.code === "Space" || e.code === "Enter")) return getRepositories();
+});
