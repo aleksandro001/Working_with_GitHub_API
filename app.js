@@ -65,5 +65,6 @@ carts.addEventListener("click", (event) => {
 getRepositories = debounce(getRepositories, 400);
 
 gitRep.addEventListener("keydown", (e) => {
-  if (!(e.code === "Space" || e.code === "Enter")) return getRepositories();
+  if (!(e.code === "Space" || e.code === "Enter" || gitRep.textLength === 0))
+    return getRepositories();
 });
