@@ -1,4 +1,3 @@
-
 const gitRep = document.getElementById("searchGitRep");
 const answerSearch = document.querySelector(".repository__answer-search");
 const carts = document.querySelector(".carts");
@@ -17,7 +16,9 @@ function debounce(fn, debounceTime) {
 }
 
 async function getRepositories() {
-  await fetch(`https://api.github.com/search/repositories?q=${gitRep.value}&per_page=5`)
+  await fetch(
+    `https://api.github.com/search/repositories?q=${gitRep.value}&per_page=5`
+  )
     .then((response) => response.json())
     .then((response) => (listAnswer = response.items));
   try {
@@ -59,6 +60,6 @@ carts.addEventListener("click", (event) => {
     event.target.parentElement.remove();
 });
 
-getRepositories = debounce(getRepositories, 3000);
+getRepositories = debounce(getRepositories, 400);
 
 gitRep.addEventListener("keydown", getRepositories);
