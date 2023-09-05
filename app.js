@@ -1,4 +1,4 @@
-const gitRep = document.getElementById("searchGitRep");
+const gitRep = document.getElementsByClassName("repository__input")[0];
 const answerSearch = document.querySelector(".repository__answer-search");
 const carts = document.querySelector(".carts");
 let fragment = new DocumentFragment();
@@ -64,7 +64,9 @@ carts.addEventListener("click", (event) => {
 
 getRepositories = debounce(getRepositories, 400);
 
-gitRep.addEventListener("keydown", (e) => {
+gitRep.addEventListener("keyup", (e) => {
   if (!(e.code === "Space" || e.code === "Enter" || gitRep.textLength === 0))
     return getRepositories();
+
+  if (gitRep.textLength === 0) answerSearch.textContent = "";
 });
